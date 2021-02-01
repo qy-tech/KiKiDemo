@@ -42,5 +42,27 @@ kiki demo
 
 4. Camera 
 
-    Google Camerax api 
+    Google Camerax 
+
+5. Sensor 
+
+    get keyevent for sensor
+
+   ```kotlin
+   val sensorKeys = mapOf(
+            61 to "61",
+            62 to "62",
+            63 to "63",
+            64 to "64",
+            65 to "65",
+            66 to "66",
+            67 to "67",
+            68 to "68"
+        )
+
+   override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        Timber.d("onKeyDown message:  keyCode $keyCode scanCode ${sensorKeys[event?.scanCode]}")
+        return super.onKeyDown(keyCode, event)
+    }
+   ``` 
 
