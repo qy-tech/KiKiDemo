@@ -13,22 +13,55 @@ kiki demo
     ```
 
 2. Microphone
+    
+    ~~use tinycap to record 4 channel audio~~ 
 
-    use tinycap to record 4 channel audio 
-
-    to start record 
+    ~~to start record~~ 
 
     ```bash
     tinycap /data/test.wav -D 1 -d 0 -c 4 -r 16000 -b 16
     ```
 
-    to stop record 
+    ~~to stop record~~ 
 
     ```bash
     kill -2 $(pifof tinycap)
     ```
-3. SPI Led 
    
+   Use libtinyalsa libary to record 4 channel audio
+   
+   ```java
+   public class TinyCapture {
+       private TinyCaptureCallback mCallback;
+   
+       public TinyCapture() {
+       }
+   
+       public void setCallback(TinyCaptureCallback callback) {
+           this.mCallback = callback;
+       }
+   
+       public native boolean startTinyCapture();
+   
+       public native void stopTinyCapture();
+   
+       public void read(byte[] buffer) {
+           if (this.mCallback != null) {
+               this.mCallback.readBuffer(buffer);
+           }
+   
+       }
+   
+       static {
+           System.loadLibrary("jni_audiorecord");
+       }
+   }
+   ```
+   
+   
+   
+3. SPI Led 
+
    use jni to control spi led
 
    ```cpp
@@ -46,7 +79,7 @@ kiki demo
 
 5. Sensor 
 
-    get keyevent for sensor
+   get keyevent for sensor
 
    ```kotlin
    val sensorKeys = mapOf(
@@ -59,10 +92,10 @@ kiki demo
             67 to "67",
             68 to "68"
         )
-
+   
    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         Timber.d("onKeyDown message:  keyCode $keyCode scanCode ${sensorKeys[event?.scanCode]}")
         return super.onKeyDown(keyCode, event)
     }
-   ``` 
+   ```
 
