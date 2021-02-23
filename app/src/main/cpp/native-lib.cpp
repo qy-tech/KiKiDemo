@@ -1,19 +1,19 @@
 #include <jni.h>
 #include <string>
-#include <stdint.h>
+#include <cstdint>
 #include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <getopt.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
-#include<android/log.h>
+#include <android/log.h>
 
 #define LOG_TAG    "SPI Test"
-#define  LOG(LEVEL, ...)  __android_log_print(LEVEL, LOG_TAG, __VA_ARGS__)
+#define LOG(LEVEL, ...)  __android_log_print(LEVEL, LOG_TAG, __VA_ARGS__)
 #define LOGD(...)  LOG(ANDROID_LOG_DEBUG,__VA_ARGS__)
 #define LOGI(...)  LOG(ANDROID_LOG_INFO,__VA_ARGS__)
 #define LOGE(...)  LOG(ANDROID_LOG_ERROR, __VA_ARGS__)

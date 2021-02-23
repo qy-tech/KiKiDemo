@@ -5,16 +5,14 @@ import android.widget.SeekBar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.Navigation
+import com.android.audiorecord.TinyCapture
 import com.qytech.kikidemo.GlobalApplication
 import com.qytech.kikidemo.R
-import com.qytech.kikidemo.ShellUtil
 import com.qytech.kikidemo.utils.FileUtils
-import com.qytech.kikidemo.utils.showToast
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
+
 
 class MainViewModel : ViewModel() {
 
@@ -29,30 +27,27 @@ class MainViewModel : ViewModel() {
         init {
             System.loadLibrary("native-lib")
         }
-
     }
 
-    private var recordJob: Job? = null
 
     private external fun spiTest()
+
+    private var tinyCapture = TinyCapture().apply {
+        setCallback { buffer ->
+            Timber.d("record buffer is  ${buffer.contentToString()}  ")
+        }
+    }
+
 
     fun onClick(v: View) {
         when (v.id) {
             R.id.btn_start_record -> {
-                recordJob = viewModelScope.launch(Dispatchers.IO) {
-                    Timber.d("onClick message: btn_start_record")
-                    val exitCode = ShellUtil.runShellCommand(COMMAND_START_RECORD)
-                    Timber.d("start record exitCode $exitCode")
-                }
-                recordJob?.start()
+                Timber.d("onClick btn_start_record:  ")
+                tinyCapture.startTinyCapture()
             }
             R.id.btn_stop_record -> {
-                recordJob?.cancel()
-                viewModelScope.launch {
-                    Timber.d("onClick message: btn_stop_record ")
-                    val exitCode = ShellUtil.runShellCommand(COMMAND_STOP_RECORD)
-                    Timber.d("stop record exitCode $exitCode")
-                }
+                Timber.d("onClick btn_stop_record:  ")
+                tinyCapture.stopTinyCapture()
             }
             R.id.btn_spi_led -> {
                 viewModelScope.launch {
@@ -69,5 +64,6 @@ class MainViewModel : ViewModel() {
         Timber.d("onProgressChanged message:  progress $progress fromUser $fromUser")
         FileUtils.write2File(File(FAN_CONTROL_PWM), progress.toString())
     }
+
 
 }
